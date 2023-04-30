@@ -8,12 +8,19 @@ routesCodigo = Blueprint('routesCodigo', __name__)
 def index():
     return jsonify({"Codigo": 'B05', "Doenca": "Sarampo"})
 
-@routesCodigo.route('/codigoCid10/<string:codigo>', methods=['GET'])
+@routesCodigo.route('/cid10/<string:codigo>', methods=['GET'])
 def getByCodigo(codigo):
-    result = ConsultaController().getByCodigo(codigo)
+    result = ConsultaController().consultaCid10(codigo)
     return jsonify(result)
 
-@routesCodigo.route('/titulo/<string:titulo>', methods=['GET'])
-def getByTitulo(titulo):
-    result = ConsultaController.getByTitulo(titulo)
-    return jsonify(result)
+
+@routesCodigo.route('/cid11/<string:codigo>', methods=['GET'])
+def getCid11(codigo):
+     result = ConsultaController().consultaCid11(codigo)
+     return jsonify(result)
+     
+@routesCodigo.route('/sigtap/<string:codigo>', methods=['GET'])
+def getSigtap(codigo):
+     result = ConsultaController().consultaSigtap(codigo)
+     return jsonify(result)
+     

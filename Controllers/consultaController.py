@@ -1,25 +1,26 @@
 import sys, os
 sys.path.insert(0, os.path.abspath(".."))
 from Models.cid10 import Cid10DAO
+from Models.cid11 import Cid11DAO
+from Models.sigtap import SigtapDAO
+
+
 
 class ConsultaController:
     def __init__(self):
-        # Cria uma instância da classe CID10DAO
         self.cid10_dao = Cid10DAO()
+        self.cid11_dao = Cid11DAO()
+        self.sigtap_dao = SigtapDAO()
     
-    def getByCodigo(self, codigo):
-        # Chama o método getByCodigo da classe CID10DAO para realizar a consulta ao banco de dados
-        result = self.cid10_dao.getByCodigo(codigo)
+    def consultaCid10(self, codigo):
+        result = self.cid10_dao.get(codigo)
         
-        # Retorna o resultado em um objeto JSON
         return result
     
-    def getByTitulo(self, titulo):
-        # Chama o método getByTitulo da classe CID10DAO para realizar a consulta ao banco de dados
-        result = self.cid10_dao.getByTitulo(titulo)
-        
-        # Retorna o resultado em um objeto JSON
+    def consultaCid11(self, codigo):
+        result = self.cid11_dao.getCid11(codigo)
         return result
-    
-    
-    
+        
+    def consultaSigtap(self, codigo):
+        result = self.sigtap_dao.get(codigo)
+        return result

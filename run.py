@@ -1,5 +1,6 @@
 import sys
 from app import create_app
+from flask_cors import CORS
 from config import app_config, app_active
 
 config = app_config[app_active]
