@@ -18,9 +18,14 @@ def getByCodigo(codigo):
 def getCid11(codigo):
      result = ConsultaController().consultaCid11(codigo)
      return jsonify(result)
-     
+      
 @routesCodigo.route('/sigtap/<string:codigo>', methods=['GET'])
 def getSigtap(codigo):
      result = ConsultaController().consultaSigtap(codigo)
+     return jsonify(result)
+
+@routesCodigo.route('/cif/<string:codigo>', methods=['GET'])
+def getCif(codigo):
+     result = ConsultaController().consultaCif(codigo)
      return jsonify(result)
      

@@ -38,6 +38,7 @@ class SigtapDAO:
                 	LEFT JOIN tb_detalhe 				d 	ON (pd.co_detalhe 		= d.co_detalhe)
                 	LEFT JOIN cid10						cid	ON (cid.co_cid			= pc.co_cid)
                     WHERE p.no_procedimento ILIKE '%{codigo}%'
+                    OR p.co_procedimento ILIKE '%{codigo}%'
                     LIMIT 5;
                     """)
         

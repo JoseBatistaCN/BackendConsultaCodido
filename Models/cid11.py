@@ -1,5 +1,5 @@
-from flask import jsonify
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import requests
 import urllib3
 urllib3.disable_warnings()
@@ -13,32 +13,31 @@ class Cid11DAO:
     
 
     def getCid11(self, codigo):
-        cur = self.conn.cursor()
+        cur = self.conn.cursor(cursor_factory=RealDictCursor)
         cur.execute(
             f"""
             SELECT * FROM consultas.cid11
-            WHERE ( unaccent(titulo) LIKE '{codigo}' ) OR
-            ( titulo LIKE '%throat%' ) OR
-            ( unaccent(title) LIKE '{codigo}' ) OR
-            ( title LIKE '{codigo}' ) OR
-            ( codigo LIKE '{codigo}' )    
+            WHERE ( unaccent(titulo) ILIKE '%{codigo}%' ) OR
+            ( titulo ILIKE '%{codigo}%' ) OR
+            ( unaccent(title) ILIKE '%{codigo}%' ) OR
+            ( title ILIKE '%{codigo}%' ) OR
+            ( codigo ILIKE '%{codigo}%' )    
             """
             )
         rows = cur.fetchall()
         
         doencas = []
         
-        for row in rows:
-            doenca = {'uri': row[0], 'codigo': row[1], 'titulo': row[2], 
-            'title': row[3], 'descricao': row[4], 'description': row[5]}
-            doencas.append(doenca)
+        # for row in rows:
+        #     doenca = {'uri': row[0], 'codigo': row[1], 'titulo': row[2], 
+        #     'title': row[3], 'descricao': row[4], 'description': row[5]}
+        #     doencas.append(doenca)
         
-        return doencas
+        return rows
+        
+    def updateCid11(self):
+        pass
             
-        
-        
-        
-
    
     def getToken(self):
            token_endpoint = 'https://icdaccessmanagement.who.int/connect/token'
@@ -48,10 +47,7 @@ class Cid11DAO:
            scope = 'icdapi_access'
            grant_type = 'client_credentials'
            
-           cert = '_.who.int.crt'
-           
            # get the OAUTH2 token
-           
            # set data to post
            payload = {'client_id': client_id, 
            	   	   'client_secret': client_secret, 
@@ -71,7 +67,18 @@ class Cid11DAO:
                	'API-Version': 'v2'}
                # make request           
                json_data = requests.get(url, headers=headers, verify=False).json()
-               relevant_data = {'title': json_data['title']['@value'],
-                     'synonyms': [s['label']['@value'] for s in json_data['synonym']],
-                     'definition': json_data['definition']['@value']}
-               return relevant_data
+               print(json_data)
+               
+               new_dict = {}
+
+               for key in json_data:
+                    if isinstance(json_data[key], dict):
+                        new_dict[key] = json_data[key]['@value']
+                    else:
+                        new_dict[key] = json_data[key]
+               print(new_dict)
+               
+            #   relevant_data = {'title': json_data['title']['@value'],
+            #          'synonyms': [s['label']['@value'] for s in json_data['synonym']],
+            #          'definition': json_data['definition']['@value']}
+               return new_dict
